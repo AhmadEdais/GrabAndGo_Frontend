@@ -1,0 +1,820 @@
+/* ============================================
+   GRAB&GO — Global Stylesheet
+   ============================================ */
+
+/* --- Reset & Base --- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #111827;
+  background-color: #f8f9fa;
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+  border: none;
+  outline: none;
+  background: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* --- CSS Variables (Design Tokens) --- */
+:root {
+  /* Colors */
+  --green-500: #22c55e;
+  --green-600: #16a34a;
+  --green-50: #f0fdf4;
+  --green-100: #dcfce7;
+
+  --bg: #f8f9fa;
+  --white: #ffffff;
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --text-muted: #9ca3af;
+  --border: #e5e7eb;
+
+  --danger: #ef4444;
+  --danger-bg: #fef2f2;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+  /* Radii */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 50px;
+  --radius-full: 9999px;
+
+  /* Sizing */
+  --max-width: 430px;
+  --header-height: 56px;
+  --nav-height: 72px;
+
+  /* Transitions */
+  --ease: 0.2s ease;
+}
+
+/* ============================================
+   LAYOUT — Page Shell
+   ============================================ */
+.page {
+  width: 100%;
+  max-width: var(--max-width);
+  min-height: 100dvh;
+  background: var(--white);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-content {
+  flex: 1;
+  padding: 0 20px 20px;
+  padding-bottom: calc(var(--nav-height) + 20px);
+  overflow-y: auto;
+}
+
+/* Pages without bottom nav (login, invoice) */
+.page-content--no-nav {
+  padding-bottom: 20px;
+}
+
+/* ============================================
+   HEADER — Top Bar
+   ============================================ */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--header-height);
+  padding: 0 16px;
+  position: sticky;
+  top: 0;
+  background: var(--white);
+  z-index: 100;
+}
+
+.header__title {
+  font-size: 17px;
+  font-weight: 600;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.header__btn {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  transition: background var(--ease);
+}
+
+.header__btn:hover {
+  background: var(--bg);
+}
+
+.header__btn svg {
+  width: 22px;
+  height: 22px;
+  stroke: var(--text-primary);
+}
+
+/* ============================================
+   BOTTOM NAV
+   ============================================ */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: var(--max-width);
+  height: var(--nav-height);
+  background: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  border-top: 1px solid var(--border);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  z-index: 200;
+}
+
+.nav-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 16px;
+  color: var(--text-muted);
+  transition: color var(--ease);
+  position: relative;
+}
+
+.nav-tab svg {
+  width: 22px;
+  height: 22px;
+}
+
+.nav-label {
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.nav-tab--active {
+  color: var(--green-500);
+}
+
+.nav-tab--active::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24px;
+  height: 2.5px;
+  background: var(--green-500);
+  border-radius: 0 0 2px 2px;
+}
+
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
+.text-title {
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+
+.text-heading {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.text-body {
+  font-size: 15px;
+  color: var(--text-primary);
+}
+
+.text-secondary {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.text-caption {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.text-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.text-green {
+  color: var(--green-500);
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+
+/* Primary — green pill */
+.btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 52px;
+  background: var(--green-500);
+  color: var(--white);
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: var(--radius-pill);
+  transition:
+    background var(--ease),
+    opacity var(--ease);
+}
+
+.btn-primary:hover {
+  background: var(--green-600);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Secondary — outlined pill */
+.btn-secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 52px;
+  background: var(--white);
+  color: var(--text-primary);
+  font-size: 16px;
+  font-weight: 500;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-pill);
+  transition: background var(--ease);
+}
+
+.btn-secondary:hover {
+  background: var(--bg);
+}
+
+/* Small pill button */
+.btn-sm {
+  height: 36px;
+  padding: 0 20px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: var(--radius-pill);
+}
+
+/* Icon button (circle) */
+.btn-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  transition: background var(--ease);
+}
+
+.btn-icon:hover {
+  background: var(--bg);
+}
+
+/* ============================================
+   FORM ELEMENTS
+   ============================================ */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.form-input {
+  width: 100%;
+  height: 48px;
+  padding: 0 4px;
+  font-size: 16px;
+  color: var(--text-primary);
+  background: transparent;
+  border-bottom: 1.5px solid var(--border);
+  transition: border-color var(--ease);
+}
+
+.form-input::placeholder {
+  color: var(--text-muted);
+}
+
+.form-input:focus {
+  border-bottom-color: var(--green-500);
+}
+
+/* Error state on inputs */
+.form-input--error {
+  border-bottom-color: var(--danger);
+}
+
+/* Error message below input */
+.form-error {
+  font-size: 13px;
+  color: var(--danger);
+  margin-top: 6px;
+  display: none;
+}
+
+.form-error--visible {
+  display: block;
+}
+
+/* General alert box (e.g. login error banner) */
+.alert-error {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--danger-bg);
+  color: var(--danger);
+  font-size: 14px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 16px;
+}
+
+.alert-error--visible {
+  display: flex;
+}
+
+/* ============================================
+   CARDS
+   ============================================ */
+.card {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: 16px;
+}
+
+.card--no-padding {
+  padding: 0;
+}
+
+/* ============================================
+   BADGES & STATUS
+   ============================================ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+}
+
+.badge--green {
+  background: var(--green-50);
+  color: var(--green-500);
+}
+
+.badge--paid {
+  background: var(--green-50);
+  color: var(--green-500);
+  font-weight: 600;
+}
+
+/* Status dot (e.g. "● Open now") */
+.status-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--green-500);
+  margin-right: 4px;
+}
+
+/* ============================================
+   SECTION HEADER  ( "Stores    See all" )
+   ============================================ */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.section-header__title {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.section-header__link {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--green-500);
+}
+
+/* ============================================
+   SEARCH BAR
+   ============================================ */
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 46px;
+  padding: 0 14px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  margin-bottom: 20px;
+}
+
+.search-bar__icon {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.search-bar__icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.search-bar__input {
+  flex: 1;
+  height: 100%;
+  font-size: 15px;
+  background: transparent;
+}
+
+.search-bar__input::placeholder {
+  color: var(--text-muted);
+}
+
+/* ============================================
+   FILTER PILLS  (horizontal scroll)
+   ============================================ */
+.filter-pills {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  margin-bottom: 20px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.filter-pills::-webkit-scrollbar {
+  display: none;
+}
+
+.filter-pill {
+  flex-shrink: 0;
+  height: 34px;
+  padding: 0 16px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  color: var(--text-primary);
+  white-space: nowrap;
+  transition: all var(--ease);
+}
+
+.filter-pill--active {
+  background: var(--green-500);
+  color: var(--white);
+  border-color: var(--green-500);
+}
+
+/* ============================================
+   GREEN GRADIENT CARD  (wallet, summary)
+   ============================================ */
+.gradient-card {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  color: var(--white);
+  border-radius: var(--radius-md);
+  padding: 20px;
+}
+
+.gradient-card__label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  opacity: 0.85;
+  margin-bottom: 4px;
+}
+
+.gradient-card__value {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.gradient-card__value span {
+  font-size: 16px;
+  font-weight: 400;
+  opacity: 0.85;
+  margin-left: 4px;
+}
+
+.gradient-card__sub {
+  font-size: 13px;
+  opacity: 0.85;
+  margin-top: 4px;
+}
+
+/* ============================================
+   LIST ITEM ROW  (profile menu, receipt row)
+   ============================================ */
+.list-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.list-item:last-child {
+  border-bottom: none;
+}
+
+.list-item__icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--green-50);
+  color: var(--green-500);
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+
+.list-item__icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.list-item__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.list-item__title {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.list-item__sub {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.list-item__right {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.list-item__chevron {
+  color: var(--text-muted);
+}
+
+/* ============================================
+   DIVIDER
+   ============================================ */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.divider__text {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* ============================================
+   BOTTOM STICKY BAR  (live cart total, etc.)
+   ============================================ */
+.sticky-bar {
+  position: fixed;
+  bottom: var(--nav-height);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: var(--max-width);
+  padding: 12px 20px;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom, 0));
+  z-index: 150;
+}
+
+.sticky-bar--no-nav {
+  bottom: 0;
+}
+
+/* ============================================
+   LOGO BLOCK  (reused on login, splash)
+   ============================================ */
+.logo-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 0 24px;
+}
+
+.logo-icon {
+  width: 72px;
+  height: 72px;
+  background: var(--green-500);
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.logo-icon svg {
+  width: 36px;
+  height: 36px;
+  stroke: var(--white);
+  fill: none;
+}
+
+.logo-block__title {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.logo-block__subtitle {
+  font-size: 15px;
+  color: var(--text-secondary);
+}
+
+/* ============================================
+   LINK TEXT  ( "Don't have an account? Create" )
+   ============================================ */
+.link-text {
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.link-text a {
+  color: var(--green-500);
+  font-weight: 600;
+}
+
+/* ============================================
+   LOADING SPINNER
+   ============================================ */
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2.5px solid rgba(255, 255, 255, 0.3);
+  border-top-color: var(--white);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================
+   UTILITY
+   ============================================ */
+.mt-auto {
+  margin-top: auto;
+}
+.mb-8 {
+  margin-bottom: 8px;
+}
+.mb-12 {
+  margin-bottom: 12px;
+}
+.mb-16 {
+  margin-bottom: 16px;
+}
+.mb-20 {
+  margin-bottom: 20px;
+}
+.mb-24 {
+  margin-bottom: 24px;
+}
+.mb-32 {
+  margin-bottom: 32px;
+}
+.gap-8 {
+  gap: 8px;
+}
+.gap-12 {
+  gap: 12px;
+}
+.gap-16 {
+  gap: 16px;
+}
+
+.flex {
+  display: flex;
+}
+.flex-col {
+  flex-direction: column;
+}
+.items-center {
+  align-items: center;
+}
+.justify-between {
+  justify-content: space-between;
+}
+.justify-center {
+  justify-content: center;
+}
+
+.w-full {
+  width: 100%;
+}
+.hidden {
+  display: none;
+}

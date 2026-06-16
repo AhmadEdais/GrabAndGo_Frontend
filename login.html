@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign in — Grab&amp;Go</title>
+    <link rel="stylesheet" href="shared/styles.css" />
+    <link rel="stylesheet" href="shared/styles.css" />
+    <script defer src="shared/config.js"></script>
+    <script defer src="shared/api.js"></script>
+    <script defer src="login.js"></script>
+  </head>
+
+  <body>
+    <div class="page">
+      <header class="header">
+        <div class="header__btn" id="btn-back">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
+        </div>
+
+        <span class="header__title">Sign in</span>
+
+        <div style="width: 40px"></div>
+      </header>
+
+      <main class="page-content page-content--no-nav">
+        <div class="logo-block">
+          <div class="logo-icon">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="white"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <path d="M16 10a4 4 0 0 1-8 0" />
+            </svg>
+          </div>
+          <h1 class="logo-block__title">Welcome back</h1>
+          <p class="logo-block__subtitle">Sign in to continue shopping</p>
+        </div>
+
+        <div class="alert-error" id="alert-error">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+          <span id="alert-error-text">Something went wrong.</span>
+        </div>
+
+        <form id="login-form" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="input-email">Email</label>
+            <input
+              class="form-input"
+              id="input-email"
+              type="email"
+              placeholder="you@example.com"
+              autocomplete="email"
+              inputmode="email"
+            />
+            <span class="form-error" id="error-email"
+              >Please enter your email.</span
+            >
+          </div>
+          <div class="form-group mb-8">
+            <label class="form-label" for="input-password">Password</label>
+            <input
+              class="form-input"
+              id="input-password"
+              type="password"
+              placeholder="••••••••"
+              autocomplete="current-password"
+            />
+            <span class="form-error" id="error-password"
+              >Please enter your password.</span
+            >
+          </div>
+
+          <div class="mb-32" style="margin-top: 32px">
+            <button class="btn-primary" id="btn-submit" type="submit">
+              <span id="btn-submit-label">Sign in</span>
+              <div class="spinner hidden" id="btn-spinner"></div>
+            </button>
+          </div>
+        </form>
+
+        <p class="link-text mt-auto">
+          Don't have an account?
+          <a href="register.html">Create account</a>
+        </p>
+      </main>
+    </div>
+  </body>
+</html>
