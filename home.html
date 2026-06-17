@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home — Grab&amp;Go</title>
+    <link rel="stylesheet" href="shared/styles.css" />
+    <script defer src="shared/config.js"></script>
+    <script defer src="shared/guard.js"></script>
+    <script defer src="shared/nav.js"></script>
+    <script defer src="home.js"></script>
+    <style>
+      /* ── Horizontal scroll row ── */
+      .scroll-row {
+        display: flex;
+        gap: 12px;
+        overflow-x: auto;
+        padding-bottom: 6px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      .scroll-row::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* ── Home header ── */
+      .home-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 20px 8px;
+      }
+
+      .home-header__brand {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 17px;
+        font-weight: 700;
+      }
+
+      .home-header__brand-icon {
+        width: 26px;
+        height: 26px;
+        background: var(--green-500);
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .home-header__brand-icon svg {
+        width: 14px;
+        height: 14px;
+        stroke: white;
+      }
+
+      .home-header__icon-btn {
+        width: 38px;
+        height: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--radius-full);
+        background: var(--bg);
+        color: var(--text-primary);
+        transition: background var(--ease);
+      }
+
+      .home-header__icon-btn:hover {
+        background: var(--border);
+      }
+
+      .home-header__icon-btn svg {
+        width: 20px;
+        height: 20px;
+        stroke: var(--text-primary);
+      }
+
+      /* ── Greeting ── */
+      .greeting {
+        padding: 12px 20px 20px;
+      }
+
+      .greeting__sub {
+        font-size: 15px;
+        color: var(--text-secondary);
+        margin-bottom: 2px;
+      }
+
+      .greeting__title {
+        font-size: 26px;
+        font-weight: 700;
+        line-height: 1.2;
+      }
+
+      /* ── Section wrapper ── */
+      .home-section {
+        margin-bottom: 28px;
+        padding: 0 20px;
+      }
+
+      /* ── News cards ── */
+      .news-card {
+        flex-shrink: 0;
+        width: 200px;
+        height: 140px;
+        border-radius: var(--radius-md);
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .news-card--green {
+        background: linear-gradient(140deg, #22c55e 0%, #15803d 100%);
+      }
+
+      .news-card--orange {
+        background: linear-gradient(140deg, #fb923c 0%, #ea580c 100%);
+      }
+
+      /* decorative circle inside news card */
+      .news-card::before {
+        content: "";
+        position: absolute;
+        top: -30px;
+        right: -30px;
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.12);
+      }
+
+      .news-card__badge {
+        display: inline-block;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.85);
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: var(--radius-pill);
+        padding: 3px 8px;
+        margin-bottom: 8px;
+        width: fit-content;
+      }
+
+      .news-card__text {
+        font-size: 15px;
+        font-weight: 600;
+        color: white;
+        line-height: 1.3;
+      }
+
+      /* ── Store card ── */
+      .store-card {
+        flex-shrink: 0;
+        width: 180px;
+        background: var(--white);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-sm);
+        overflow: hidden;
+      }
+
+      .store-card__image {
+        height: 120px;
+        position: relative;
+        background: linear-gradient(140deg, #22c55e 0%, #15803d 100%);
+      }
+
+      .store-card__fav {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 30px;
+        height: 30px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: var(--shadow-sm);
+      }
+
+      .store-card__fav svg {
+        width: 15px;
+        height: 15px;
+        stroke: var(--green-500);
+        fill: var(--green-500);
+      }
+
+      .store-card__info {
+        padding: 10px 12px 12px;
+      }
+
+      .store-card__name {
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .store-card__address {
+        font-size: 12px;
+        color: var(--text-secondary);
+        margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+        gap: 3px;
+      }
+
+      .store-card__address svg {
+        width: 11px;
+        height: 11px;
+        stroke: var(--text-secondary);
+        flex-shrink: 0;
+      }
+
+      .store-card__status {
+        font-size: 12px;
+        color: var(--green-500);
+        font-weight: 500;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="page">
+      <!-- ── Header ── -->
+      <header class="home-header">
+        <button class="home-header__icon-btn">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+
+        <div class="home-header__brand">
+          <div class="home-header__brand-icon">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <path d="M16 10a4 4 0 0 1-8 0" />
+            </svg>
+          </div>
+          Grab&amp;Go
+        </div>
+
+        <a class="home-header__icon-btn" href="profile.html">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+        </a>
+      </header>
+
+      <!-- ── Main ── -->
+      <main class="page-content">
+        <!-- Greeting -->
+        <div class="greeting">
+          <p class="greeting__sub" id="greeting-line">Hi 👋</p>
+          <h1 class="greeting__title">Ready to grab &amp; go?</h1>
+        </div>
+
+        <!-- News & Community -->
+        <div class="home-section">
+          <p class="text-label mb-12">News &amp; Community</p>
+          <div class="scroll-row">
+            <!-- Card 1 -->
+            <div class="news-card news-card--green">
+              <span class="news-card__badge">New</span>
+              <p class="news-card__text">3 new stores<br />opened in Amman</p>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="news-card news-card--orange">
+              <span class="news-card__badge">Community</span>
+              <p class="news-card__text">How vision<br />tracking works</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stores -->
+        <div class="home-section">
+          <div class="section-header">
+            <h2 class="section-header__title">Stores</h2>
+            <a class="section-header__link" href="stores.html">See all</a>
+          </div>
+          <div class="scroll-row">
+            <a class="store-card" href="store-detail.html">
+              <div class="store-card__image">
+                <div class="store-card__fav">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path
+                      d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div class="store-card__info">
+                <p class="store-card__name">Grab&amp;Go Store</p>
+                <p class="store-card__address">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z" />
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
+                  Mecca St, Amman
+                </p>
+                <p class="store-card__status">
+                  <span class="status-dot"></span>Open now · 0.4 km
+                </p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </main>
+
+      <!-- Nav bar — filled by nav.js -->
+      <div id="nav-bar"></div>
+    </div>
+  </body>
+</html>

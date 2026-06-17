@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Store — Grab&amp;Go</title>
+    <link rel="stylesheet" href="shared/styles.css" />
+  </head>
+  <body>
+    <style>
+      /* ─── Store Info Card ─────────────────────────────────────────────────────── */
+      .store-info-card__body {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .store-info-card__name {
+        font-size: 16px;
+        font-weight: 600;
+        color: #111827;
+        margin-bottom: 4px;
+      }
+
+      .store-info-card__address {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 13px;
+        color: #6b7280;
+      }
+
+      .store-info-card__address svg {
+        flex-shrink: 0;
+        stroke: #6b7280;
+      }
+
+      .store-status-badge {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: #f0fdf4;
+        color: #16a34a;
+        font-size: 12px;
+        font-weight: 500;
+        padding: 4px 10px;
+        border-radius: 50px;
+      }
+
+      /* ─── QR Card ─────────────────────────────────────────────────────────────── */
+      .qr-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 8px;
+        padding: 24px 20px;
+      }
+
+      .qr-card__title {
+        font-size: 17px;
+        font-weight: 700;
+        color: #111827;
+      }
+
+      .qr-card__subtitle {
+        font-size: 13px;
+        color: #6b7280;
+        margin-bottom: 8px;
+      }
+
+      .qr-card__image-wrap {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #f3f4f6;
+      }
+
+      .qr-card__image {
+        width: 200px;
+        height: 200px;
+        display: block;
+      }
+
+      .qr-card__loading {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f3f4f6;
+      }
+
+      .qr-card__expiry {
+        font-size: 12px;
+        color: #6b7280;
+        margin-top: 4px;
+      }
+
+      /* ─── Spinner ─────────────────────────────────────────────────────────────── */
+      .spinner {
+        width: 28px;
+        height: 28px;
+        border: 3px solid #e5e7eb;
+        border-top-color: #22c55e;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* ─── Demo Section ────────────────────────────────────────────────────────── */
+      .demo-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 0 32px;
+      }
+
+      .demo-section__label {
+        font-size: 12px;
+        color: #9ca3af;
+        letter-spacing: 0.04em;
+      }
+
+      .btn-simulate {
+        width: 100%;
+        max-width: 280px;
+      }
+
+      /* ─── Status Message ──────────────────────────────────────────────────────── */
+      .status-msg {
+        font-size: 14px;
+        font-weight: 500;
+        min-height: 20px;
+        text-align: center;
+      }
+
+      .status-msg--success {
+        color: #22c55e;
+      }
+      .status-msg--error {
+        color: #ef4444;
+      }
+    </style>
+    <div class="page">
+      <!-- Header -->
+      <header class="page-header">
+        <button class="btn-back" id="btn-back" aria-label="Go back">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
+        </button>
+        <h1 class="page-header__title">Store Details</h1>
+        <div class="page-header__spacer"></div>
+      </header>
+
+      <main class="page-main">
+        <!-- Store Info Card (hardcoded — single store) -->
+        <div class="card store-info-card">
+          <div class="store-info-card__body">
+            <div>
+              <p class="store-info-card__name">Grab&amp;Go Store</p>
+              <p class="store-info-card__address">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="13"
+                  height="13"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+                Mecca St, Amman
+              </p>
+            </div>
+            <span class="store-status-badge">
+              <span class="status-dot"></span>Open
+            </span>
+          </div>
+        </div>
+
+        <!-- QR Card -->
+        <div class="card qr-card">
+          <p class="qr-card__title">Scan to Enter</p>
+          <p class="qr-card__subtitle">Show this code at the store entrance</p>
+
+          <div class="qr-card__image-wrap">
+            <img id="qr-image" class="qr-card__image" alt="Entry QR Code" />
+            <div class="qr-card__loading" id="qr-loading">
+              <div class="spinner"></div>
+            </div>
+          </div>
+
+          <p class="qr-card__expiry" id="qr-expiry">Loading QR code…</p>
+        </div>
+
+        <!-- Demo Section -->
+        <div class="demo-section">
+          <p class="demo-section__label">— Demo only —</p>
+          <button class="btn-primary btn-simulate" id="btn-simulate" disabled>
+            Simulate Gate Scan
+          </button>
+          <p class="status-msg" id="status-msg"></p>
+        </div>
+      </main>
+    </div>
+
+    <script src="shared/config.js" defer></script>
+    <script src="shared/api.js" defer></script>
+    <script src="shared/guard.js" defer></script>
+    <script src="store-detail.js" defer></script>
+  </body>
+</html>

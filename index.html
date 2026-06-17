@@ -3,7 +3,149 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login</title>
+    <title>Grab&amp;Go</title>
+    <link rel="stylesheet" href="shared/styles.css" />
+    <script defer src="index.js"></script>
+    <style>
+      /* ── Splash-specific layout ── */
+      .splash {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 0 28px 48px;
+      }
+
+      /* Logo area takes the upper portion */
+      .splash__hero {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
+
+      /* Decorative concentric rings */
+      .splash__rings {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 28px;
+      }
+
+      .splash__ring {
+        position: absolute;
+        border-radius: 50%;
+        border: 1.5px solid rgba(34, 197, 94, 0.2);
+      }
+
+      .splash__ring--outer {
+        width: 220px;
+        height: 220px;
+        background: radial-gradient(
+          circle,
+          rgba(34, 197, 94, 0.06) 0%,
+          transparent 70%
+        );
+      }
+
+      .splash__ring--inner {
+        width: 150px;
+        height: 150px;
+        background: radial-gradient(
+          circle,
+          rgba(34, 197, 94, 0.1) 0%,
+          transparent 70%
+        );
+      }
+
+      /* Logo icon sits on top of the rings */
+      .splash__logo-icon {
+        position: relative;
+        width: 80px;
+        height: 80px;
+        background: var(--green-500);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 8px 24px rgba(34, 197, 94, 0.35);
+        z-index: 1;
+      }
+
+      .splash__logo-icon svg {
+        width: 40px;
+        height: 40px;
+      }
+
+      .splash__title {
+        font-size: 32px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        margin-bottom: 12px;
+      }
+
+      .splash__subtitle {
+        font-size: 16px;
+        color: var(--text-secondary);
+        text-align: center;
+        line-height: 1.6;
+        max-width: 280px;
+      }
+
+      /* Actions pinned to the bottom */
+      .splash__actions {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+      }
+    </style>
   </head>
-  <body></body>
+
+  <body>
+    <div class="page">
+      <main class="splash">
+        <!-- Hero: rings + logo + text -->
+        <div class="splash__hero">
+          <div class="splash__rings">
+            <div class="splash__ring splash__ring--outer"></div>
+            <div class="splash__ring splash__ring--inner"></div>
+            <div class="splash__logo-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="white"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <path d="M16 10a4 4 0 0 1-8 0" />
+              </svg>
+            </div>
+          </div>
+
+          <h1 class="splash__title">Grab&amp;Go</h1>
+          <p class="splash__subtitle">
+            Skip the checkout. Cameras track what you grab — pay automatically
+            when you leave.
+          </p>
+        </div>
+
+        <div class="splash__actions">
+          <a href="register.html" class="btn-primary"> Get started &nbsp;→ </a>
+          <p class="link-text">
+            Already have an account?
+            <a href="login.html">Sign in</a>
+          </p>
+        </div>
+      </main>
+    </div>
+  </body>
 </html>

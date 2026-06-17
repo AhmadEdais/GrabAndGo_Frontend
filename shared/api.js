@@ -1,4 +1,9 @@
-const request = async (endpoint, method = "GET", body = null) => {
+const request = async (
+  endpoint,
+  method = "GET",
+  body = null,
+  signal = null,
+) => {
   const token = localStorage.getItem(CONFIG.TOKEN_KEY);
 
   const options = {
@@ -7,6 +12,7 @@ const request = async (endpoint, method = "GET", body = null) => {
       "Content-Type": "application/json",
       ...(token && { Authorization: `Bearer ${token}` }),
     },
+    ...(signal && { signal }), // ← sits alongside method, headers, body
   };
 
   if (body) {
@@ -36,6 +42,10 @@ const request = async (endpoint, method = "GET", body = null) => {
 
 const API = {
   login: (email, password) =>
-    request("/auth/login", "POST", { email, password }),
-  signup: (data) => request("/auth/signup", "POST", data),
+    request("/Users/login", "POST", { email, password }),
+  signup: (data) => request("/Users/register", "POST", data),
+  generateQr: () => request("/Sessions/generate-qr", "POST", { storeId: 1 }),
+
+  simulateScan: (qrCodeData) => request("/Gate/scan", "POST", { qrCodeData }),
+  getActiveSession: () => request("/Sessions/active"),
 };

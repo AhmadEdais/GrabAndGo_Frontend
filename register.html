@@ -3,15 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sign in — Grab&amp;Go</title>
+    <title>Create account — Grab&amp;Go</title>
     <link rel="stylesheet" href="shared/styles.css" />
     <script defer src="shared/config.js"></script>
     <script defer src="shared/api.js"></script>
-    <script defer src="login.js"></script>
+    <script defer src="register.js"></script>
   </head>
 
   <body>
     <div class="page">
+      <!-- ── Header ── -->
       <header class="header">
         <button class="header__btn" id="btn-back">
           <svg
@@ -26,13 +27,13 @@
             <polyline points="15 18 9 12 15 6" />
           </svg>
         </button>
-
-        <span class="header__title">Sign in</span>
-
+        <span class="header__title">Create account</span>
         <div style="width: 40px"></div>
       </header>
 
+      <!-- ── Main ── -->
       <main class="page-content page-content--no-nav">
+        <!-- Logo -->
         <div class="logo-block">
           <div class="logo-icon">
             <svg
@@ -49,10 +50,11 @@
               <path d="M16 10a4 4 0 0 1-8 0" />
             </svg>
           </div>
-          <h1 class="logo-block__title">Welcome back</h1>
-          <p class="logo-block__subtitle">Sign in to continue shopping</p>
+          <h1 class="logo-block__title">Create account</h1>
+          <p class="logo-block__subtitle">Start your Grab&amp;Go journey</p>
         </div>
 
+        <!-- Error alert -->
         <div class="alert-error" id="alert-error">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -72,7 +74,39 @@
           <span id="alert-error-text">Something went wrong.</span>
         </div>
 
-        <form id="login-form" novalidate>
+        <!-- Form -->
+        <form id="register-form" novalidate>
+          <!-- First name -->
+          <div class="form-group">
+            <label class="form-label" for="input-firstname">First name</label>
+            <input
+              class="form-input"
+              id="input-firstname"
+              type="text"
+              placeholder="Ahmad"
+              autocomplete="given-name"
+            />
+            <span class="form-error" id="error-firstname">
+              Please enter your first name.
+            </span>
+          </div>
+
+          <!-- Last name -->
+          <div class="form-group">
+            <label class="form-label" for="input-lastname">Last name</label>
+            <input
+              class="form-input"
+              id="input-lastname"
+              type="text"
+              placeholder="Edais"
+              autocomplete="family-name"
+            />
+            <span class="form-error" id="error-lastname">
+              Please enter your last name.
+            </span>
+          </div>
+
+          <!-- Email -->
           <div class="form-group">
             <label class="form-label" for="input-email">Email</label>
             <input
@@ -83,10 +117,12 @@
               autocomplete="email"
               inputmode="email"
             />
-            <span class="form-error" id="error-email"
-              >Please enter your email.</span
-            >
+            <span class="form-error" id="error-email">
+              Please enter your email.
+            </span>
           </div>
+
+          <!-- Password -->
           <div class="form-group mb-8">
             <label class="form-label" for="input-password">Password</label>
             <input
@@ -94,24 +130,25 @@
               id="input-password"
               type="password"
               placeholder="••••••••"
-              autocomplete="current-password"
+              autocomplete="new-password"
             />
-            <span class="form-error" id="error-password"
-              >Please enter your password.</span
-            >
+            <span class="form-error" id="error-password">
+              Please enter a password.
+            </span>
           </div>
 
-          <div class="mb-32" style="margin-top: 32px">
+          <!-- Submit -->
+          <div style="margin-top: 32px" class="mb-32">
             <button class="btn-primary" id="btn-submit" type="submit">
-              <span id="btn-submit-label">Sign in</span>
+              <span id="btn-submit-label">Create account</span>
               <div class="spinner hidden" id="btn-spinner"></div>
             </button>
           </div>
         </form>
 
+        <!-- Footer link -->
         <p class="link-text mt-auto">
-          Don't have an account?
-          <a href="register.html">Create account</a>
+          Already have an account? <a href="login.html">Sign in</a>
         </p>
       </main>
     </div>
