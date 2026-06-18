@@ -48,4 +48,7 @@ const API = {
 
   simulateScan: (qrCodeData) => request("/Gate/scan", "POST", { qrCodeData }),
   getActiveSession: () => request("/Sessions/active"),
+  getBalance: () => request("/Wallets/balance"),
+  topUp: (amount) => request("/Wallets/top-up", "POST", { amount }),
+  getActiveCart: () => request("/Carts/active"),
 };

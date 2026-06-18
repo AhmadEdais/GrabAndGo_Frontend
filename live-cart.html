@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+    />
+    <title>Live Cart — Grab&amp;Go</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+    <script src="shared/config.js"></script>
+    <script src="shared/api.js"></script>
+    <script src="shared/guard.js"></script>
+
+    <style>
+      [hidden] {
+        display: none !important;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #f8f9fa;
+        color: #111827;
+        min-height: 100vh;
+      }
+
+      #app {
+        max-width: 430px;
+        margin: 0 auto;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* ── Loading ── */
+      #loading-state {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        padding: 40px 24px;
+      }
+
+      .spinner {
+        width: 36px;
+        height: 36px;
+        border: 3px solid #e5e7eb;
+        border-top-color: #22c55e;
+        border-radius: 50%;
+        animation: spin 0.75s linear infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      #loading-state p {
+        font-size: 14px;
+        color: #6b7280;
+      }
+
+      .error-text {
+        color: #ef4444;
+        font-size: 14px;
+        text-align: center;
+        line-height: 1.7;
+      }
+
+      /* ── Header ── */
+      .page-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 16px 14px;
+        background: #ffffff;
+        border-bottom: 1px solid #f3f4f6;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+
+      .page-header h1 {
+        font-size: 18px;
+        font-weight: 700;
+        color: #111827;
+      }
+
+      .live-badge {
+        background: #dcfce7;
+        color: #16a34a;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        padding: 4px 10px;
+        border-radius: 50px;
+        animation: pulse-badge 2s ease-in-out infinite;
+      }
+
+      @keyframes pulse-badge {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+
+      /* ── Shortfall Banner ── */
+      #shortfall-banner {
+        margin: 12px 16px 0;
+        padding: 12px 14px;
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: 500;
+        color: #dc2626;
+        text-align: center;
+        line-height: 1.5;
+      }
+
+      /* ── Cart Section ── */
+      .cart-section {
+        flex: 1;
+        padding: 16px 16px 8px;
+      }
+
+      .section-label {
+        font-size: 11px;
+        font-weight: 700;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        margin-bottom: 10px;
+      }
+
+      /* ── Cart Items ── */
+      #cart-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .cart-item {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 14px 16px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        animation: fade-up 0.18s ease-out;
+      }
+
+      @keyframes fade-up {
+        from {
+          opacity: 0;
+          transform: translateY(6px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .item-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: #111827;
+        display: block;
+      }
+
+      .item-label {
+        font-size: 12px;
+        color: #6b7280;
+        display: block;
+        margin-top: 2px;
+      }
+
+      .item-right {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 4px;
+        flex-shrink: 0;
+        margin-left: 12px;
+      }
+
+      .item-total {
+        font-size: 14px;
+        font-weight: 700;
+        color: #111827;
+      }
+
+      .item-qty {
+        font-size: 11px;
+        color: #6b7280;
+        background: #f3f4f6;
+        padding: 2px 8px;
+        border-radius: 50px;
+      }
+
+      /* ── Empty State ── */
+      #empty-state {
+        text-align: center;
+        padding: 64px 24px;
+      }
+
+      #empty-state p {
+        font-size: 16px;
+        font-weight: 600;
+        color: #111827;
+        margin-bottom: 6px;
+      }
+
+      #empty-state span {
+        font-size: 13px;
+        color: #6b7280;
+      }
+
+      /* ── Summary Card ── */
+      .summary-card {
+        margin: 12px 16px 32px;
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        padding: 16px;
+      }
+
+      .summary-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 5px 0;
+      }
+
+      .summary-label {
+        font-size: 14px;
+        color: #6b7280;
+      }
+
+      .summary-value {
+        font-size: 15px;
+        font-weight: 700;
+        color: #111827;
+      }
+
+      .summary-divider {
+        height: 1px;
+        background: #f3f4f6;
+        margin: 10px 0;
+      }
+
+      #wallet-balance {
+        color: #22c55e;
+      }
+      #wallet-balance.danger {
+        color: #dc2626;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div id="loading-state">
+        <div class="spinner"></div>
+        <p>Connecting to your cart…</p>
+      </div>
+
+      <div id="content" hidden>
+        <header class="page-header">
+          <button class="btn-back" id="btn-back" aria-label="Go back">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+          </button>
+          <h1>Your Cart</h1>
+          <span class="live-badge">● LIVE</span>
+        </header>
+
+        <div id="shortfall-banner" hidden></div>
+
+        <section class="cart-section">
+          <p class="section-label">Items</p>
+          <ul id="cart-list"></ul>
+          <div id="empty-state" hidden>
+            <p>No items yet</p>
+            <span>Start picking items from the shelves</span>
+          </div>
+        </section>
+
+        <div class="summary-card">
+          <div class="summary-row">
+            <span class="summary-label">Cart Total</span>
+            <span class="summary-value" id="cart-total">JD 0.000</span>
+          </div>
+          <div class="summary-divider"></div>
+          <div class="summary-row">
+            <span class="summary-label">Wallet Balance</span>
+            <span class="summary-value" id="wallet-balance">JD 0.000</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="live-cart.js"></script>
+  </body>
+</html>

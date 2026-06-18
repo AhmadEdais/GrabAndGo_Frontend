@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+    />
+    <title>Profile — Grab&amp;Go</title>
+    <script src="shared/config.js"></script>
+    <script src="shared/api.js"></script>
+    <script src="shared/guard.js"></script>
+    <style>
+      [hidden] {
+        display: none !important;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #f8f9fa;
+        color: #111827;
+        min-height: 100vh;
+      }
+
+      #app {
+        max-width: 430px;
+        margin: 0 auto;
+        min-height: 100vh;
+      }
+
+      /* ── Page Header ── */
+      .page-header {
+        padding: 20px 16px 14px;
+        background: #ffffff;
+        border-bottom: 1px solid #f3f4f6;
+        text-align: center;
+      }
+
+      .page-header h1 {
+        font-size: 18px;
+        font-weight: 700;
+        color: #111827;
+      }
+
+      /* ── Profile Section ── */
+      .profile-section {
+        background: #ffffff;
+        padding: 28px 16px 24px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .avatar {
+        width: 72px;
+        height: 72px;
+        background: #22c55e;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 6px;
+      }
+
+      .profile-name {
+        font-size: 20px;
+        font-weight: 700;
+        color: #111827;
+      }
+
+      .profile-email {
+        font-size: 13px;
+        color: #6b7280;
+      }
+
+      /* ── Wallet Card ── */
+      .wallet-card {
+        margin: 16px;
+        background: #22c55e;
+        border-radius: 16px;
+        padding: 20px 20px 20px;
+        color: #ffffff;
+      }
+
+      .wallet-label {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        opacity: 0.8;
+        margin-bottom: 10px;
+      }
+
+      #wallet-amount {
+        font-size: 34px;
+        font-weight: 700;
+        margin-bottom: 20px;
+        line-height: 1;
+      }
+
+      #wallet-amount .currency {
+        font-size: 16px;
+        font-weight: 500;
+        opacity: 0.8;
+        margin-left: 4px;
+      }
+
+      #top-up-btn {
+        background: #ffffff;
+        color: #22c55e;
+        border: none;
+        border-radius: 50px;
+        padding: 11px 32px;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: opacity 0.15s;
+      }
+
+      #top-up-btn:active {
+        opacity: 0.85;
+      }
+
+      /* ── Menu ── */
+      .menu-section {
+        margin: 8px 16px 32px;
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+      }
+
+      .menu-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px;
+        border-bottom: 1px solid #f3f4f6;
+        text-decoration: none;
+        color: #111827;
+      }
+
+      .menu-item:last-child {
+        border-bottom: none;
+      }
+
+      .menu-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .menu-icon {
+        width: 36px;
+        height: 36px;
+        background: #f3f4f6;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .menu-icon svg {
+        width: 18px;
+        height: 18px;
+        stroke: #6b7280;
+        fill: none;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .menu-label {
+        font-size: 14px;
+        font-weight: 600;
+        color: #111827;
+      }
+
+      .menu-chevron {
+        font-size: 18px;
+        color: #d1d5db;
+      }
+
+      /* ── Modal Overlay ── */
+      #modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.45);
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        z-index: 100;
+      }
+
+      .modal-card {
+        background: #ffffff;
+        border-radius: 20px 20px 0 0;
+        padding: 24px 20px 40px;
+        width: 100%;
+        max-width: 430px;
+      }
+
+      .modal-handle {
+        width: 36px;
+        height: 4px;
+        background: #e5e7eb;
+        border-radius: 2px;
+        margin: 0 auto 20px;
+      }
+
+      .modal-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 20px;
+      }
+
+      .modal-input-label {
+        font-size: 13px;
+        color: #6b7280;
+        margin-bottom: 8px;
+      }
+
+      #amount-input {
+        width: 100%;
+        padding: 14px 16px;
+        border: 1.5px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 22px;
+        font-weight: 600;
+        color: #111827;
+        outline: none;
+        font-family: inherit;
+      }
+
+      #amount-input:focus {
+        border-color: #22c55e;
+      }
+
+      #amount-input.error {
+        border-color: #ef4444;
+      }
+
+      .input-error {
+        font-size: 12px;
+        color: #ef4444;
+        margin-top: 6px;
+        min-height: 18px;
+      }
+
+      .modal-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      #cancel-btn {
+        flex: 1;
+        padding: 14px;
+        border: 1.5px solid #e5e7eb;
+        border-radius: 50px;
+        background: #ffffff;
+        color: #111827;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        font-family: inherit;
+      }
+
+      #confirm-btn {
+        flex: 2;
+        padding: 14px;
+        border: none;
+        border-radius: 50px;
+        background: #22c55e;
+        color: #ffffff;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        font-family: inherit;
+        transition: opacity 0.15s;
+      }
+
+      #confirm-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <header class="page-header">
+        <h1>Profile</h1>
+      </header>
+
+      <div class="profile-section">
+        <div class="avatar" id="avatar"></div>
+        <p class="profile-name" id="profile-name"></p>
+        <p class="profile-email" id="profile-email"></p>
+      </div>
+
+      <div class="wallet-card">
+        <p class="wallet-label">Wallet Balance</p>
+        <p id="wallet-amount">— <span class="currency">JOD</span></p>
+        <button id="top-up-btn">Top Up</button>
+      </div>
+
+      <div class="menu-section">
+        <a class="menu-item" href="receipts.html">
+          <div class="menu-left">
+            <div class="menu-icon">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"
+                />
+                <rect x="9" y="3" width="6" height="4" rx="1" />
+                <line x1="9" y1="12" x2="15" y2="12" />
+                <line x1="9" y1="16" x2="13" y2="16" />
+              </svg>
+            </div>
+            <span class="menu-label">Receipts</span>
+          </div>
+          <span class="menu-chevron">›</span>
+        </a>
+      </div>
+
+      <!-- Top-Up Modal -->
+      <div id="modal-overlay" hidden>
+        <div class="modal-card">
+          <div class="modal-handle"></div>
+          <p class="modal-title">Add Balance</p>
+          <p class="modal-input-label">Amount (JOD)</p>
+          <input
+            type="number"
+            id="amount-input"
+            placeholder="0.000"
+            min="0.001"
+            step="0.001"
+          />
+          <p id="input-error" class="input-error"></p>
+          <div class="modal-actions">
+            <button id="cancel-btn">Cancel</button>
+            <button id="confirm-btn">Confirm</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="profile.js"></script>
+  </body>
+</html>
