@@ -9,7 +9,7 @@ const qrExpiry = document.getElementById("qr-expiry");
 const btnBack = document.getElementById("btn-back");
 const btnSimulate = document.getElementById("btn-simulate");
 const statusMsg = document.getElementById("status-msg");
-
+const simulateTrackBtn = document.getElementById("simulate-track-btn");
 const showStatus = (msg, isError = false) => {
   statusMsg.textContent = msg;
   statusMsg.className = `status-msg ${isError ? "status-msg--error" : "status-msg--success"}`;
@@ -58,7 +58,26 @@ const handleSimulate = async () => {
     btnSimulate.disabled = false;
   }
 };
+const generateTrackId = () =>
+  "C_demo_" + String(Math.floor(Math.random() * 1000)).padStart(3, "0");
 
+const handleSimulateTrack = async () => {
+  try {
+    simulateTrackBtn.disabled = true;
+
+    await API.simulateScan(state.currentQrData);
+
+    const session = await API.getActiveSession();
+
+    const trackId = generateTrackId();
+    await API.bindTrack(session.sessionId, trackId);
+    localStorage.setItem(CONFIG.TRACK_KEY, trackId);
+
+    window.location.href = "live-cart.html";
+  } catch (err) {
+    simulateTrackBtn.disabled = false;
+  }
+};
 const init = async () => {
   const session = await API.getActiveSession();
 
@@ -76,5 +95,5 @@ btnBack.addEventListener("click", () => {
 });
 
 btnSimulate.addEventListener("click", handleSimulate);
-
+simulateTrackBtn.addEventListener("click", handleSimulateTrack);
 init();

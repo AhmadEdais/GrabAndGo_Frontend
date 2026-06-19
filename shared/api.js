@@ -51,4 +51,17 @@ const API = {
   getBalance: () => request("/Wallets/balance"),
   topUp: (amount) => request("/Wallets/top-up", "POST", { amount }),
   getActiveCart: () => request("/Carts/active"),
+  bindTrack: (sessionId, trackId) =>
+    request("/VisionSystem/bind-track", "POST", {
+      sessionId: String(sessionId),
+      trackId,
+      source: "CAM01_Entry",
+    }),
+
+  simulateCheckout: (trackId) =>
+    request("/Gate/checkout", "POST", {
+      trackId,
+      cameraCode: "CAM03_Checkout",
+      eventTime: new Date().toISOString(),
+    }),
 };

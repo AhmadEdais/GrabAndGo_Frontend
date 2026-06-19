@@ -3,4 +3,5 @@ const CONFIG = {
   HUB_URL: "https://localhost:7088/hubs/cart",
   TOKEN_KEY: "gg_token",
   USER_KEY: "gg_user",
+  TRACK_KEY: "gg_track_id",
 };

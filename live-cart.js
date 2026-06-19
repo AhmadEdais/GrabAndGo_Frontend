@@ -13,6 +13,8 @@ const cartTotalEl = document.getElementById("cart-total");
 const balanceEl = document.getElementById("wallet-balance");
 const shortfallEl = document.getElementById("shortfall-banner");
 const buttonBack = document.getElementById("btn-back");
+const checkoutBtn = document.getElementById("simulate-checkout-btn");
+const checkoutOverlay = document.getElementById("checkout-overlay");
 const fmt = (amount) => `JD ${Number(amount).toFixed(3)}`;
 
 const renderCart = () => {
@@ -78,7 +80,25 @@ const setupSignalR = async () => {
   await state.connection.start();
   await state.connection.invoke("SubscribeToSession", state.sessionId);
 };
+const handleSimulateCheckout = async () => {
+  const trackId = localStorage.getItem(CONFIG.TRACK_KEY);
 
+  if (!trackId) {
+    alert("No tracking session found. Run Simulate Scan + Track first.");
+    return;
+  }
+
+  checkoutBtn.disabled = true;
+  checkoutOverlay.hidden = false;
+
+  try {
+    await API.simulateCheckout(trackId);
+  } catch (err) {
+    checkoutOverlay.hidden = true;
+    checkoutBtn.disabled = false;
+    alert(`Checkout failed: ${err.message}`);
+  }
+};
 const liveinit = async () => {
   state.isLoading = true;
 
@@ -94,6 +114,7 @@ const liveinit = async () => {
     state.isLoading = false;
     loadingEl.hidden = true;
     contentEl.hidden = false;
+    checkoutBtn.addEventListener("click", handleSimulateCheckout);
   } catch (err) {
     loadingEl.innerHTML = `...`;
   }
