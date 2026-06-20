@@ -74,7 +74,17 @@ const setupSignalR = async () => {
 
   state.connection.on("GateStatusUpdate", (payload) => {
     console.log("GateStatusUpdate received:", payload);
-    window.location.href = `invoice.html?id=${payload.transactionId}`;
+    if (payload.status === "SUCCESS") {
+      window.location.href = `invoice.html?id=${payload.transactionId}`;
+      return;
+    }
+
+    checkoutOverlay.hidden = true;
+    checkoutBtn.disabled = false;
+
+    shortfallEl.textContent = `${payload.message} — short ${fmt(payload.shortfall)}`;
+    shortfallEl.hidden = false;
+    balanceEl.classList.add("danger");
   });
 
   await state.connection.start();

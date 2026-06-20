@@ -64,4 +64,22 @@ const API = {
       cameraCode: "CAM03_Checkout",
       eventTime: new Date().toISOString(),
     }),
+  getInvoice: (transactionId) =>
+    request(`/Invoices/GetInvoiceData/${transactionId}`),
+
+  getInvoicePdfBlob: async (transactionId) => {
+    const token = localStorage.getItem(CONFIG.TOKEN_KEY);
+    const response = await fetch(
+      `${CONFIG.BASE_URL}/Invoices/${transactionId}/pdf`,
+      {
+        headers: {
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
+      },
+    );
+    if (!response.ok) throw new Error("Failed to load invoice PDF");
+    return response.blob();
+  },
+  getInvoiceList: (pageNumber = 1, pageSize = 20) =>
+    request(`/Invoices?page=${pageNumber}&pageSize=${pageSize}`),
 };

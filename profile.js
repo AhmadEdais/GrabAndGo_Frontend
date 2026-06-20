@@ -73,7 +73,7 @@ const init = async () => {
 
   try {
     const result = await API.getBalance();
-    state.balance = result.balance; // verify field name in api-contracts.md
+    state.balance = result.currentBalance;
     renderBalance();
   } catch (err) {
     walletAmountEl.innerHTML = `<span style="font-size:14px; opacity:0.8">Could not load balance</span>`;

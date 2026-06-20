@@ -17,7 +17,8 @@ const showStatus = (msg, isError = false) => {
 
 const fetchQr = async () => {
   qrLoading.style.display = "flex";
-
+  btnSimulate.disabled = true; // ← add
+  simulateTrackBtn.disabled = true; // ← add
   const data = await API.generateQr();
 
   if (!data) {
@@ -33,6 +34,7 @@ const fetchQr = async () => {
   qrImage.onload = () => {
     qrLoading.style.display = "none";
     btnSimulate.disabled = false;
+    simulateTrackBtn.disabled = false; // ← add
   };
 
   const expires = new Date(data.expiresAt);
@@ -43,6 +45,7 @@ const handleSimulate = async () => {
   if (!state.currentQrData) return;
 
   btnSimulate.disabled = true;
+  simulateTrackBtn.disabled = true;
   showStatus("Scanning…");
 
   const result = await API.simulateScan(state.currentQrData);
@@ -56,6 +59,7 @@ const handleSimulate = async () => {
   } else {
     showStatus("Scan failed. Try again.", true);
     btnSimulate.disabled = false;
+    simulateTrackBtn.disabled = false;
   }
 };
 const generateTrackId = () =>

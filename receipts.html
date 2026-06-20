@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+    />
+    <title>Purchase History — Grab&amp;Go</title>
+
+    <script src="shared/config.js" defer></script>
+    <script src="shared/api.js" defer></script>
+    <script src="shared/guard.js" defer></script>
+    <script src="receipts.js" defer></script>
+
+    <style>
+      [hidden] {
+        display: none !important;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #f8f9fa;
+        color: #111827;
+        min-height: 100vh;
+      }
+
+      #app {
+        max-width: 430px;
+        margin: 0 auto;
+        min-height: 100vh;
+      }
+
+      /* ── Loading / Error ── */
+      #loading-state {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        padding: 40px 24px;
+      }
+
+      .spinner {
+        width: 32px;
+        height: 32px;
+        border: 3px solid #e5e7eb;
+        border-top-color: #22c55e;
+        border-radius: 50%;
+        animation: spin 0.75s linear infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      #loading-state p {
+        font-size: 14px;
+        color: #6b7280;
+      }
+      .error-text {
+        color: #ef4444;
+        font-size: 14px;
+        text-align: center;
+        line-height: 1.7;
+      }
+
+      /* ── Header ── */
+      .page-header {
+        padding: 20px 16px 14px;
+        background: #ffffff;
+        border-bottom: 1px solid #f3f4f6;
+        text-align: center;
+      }
+
+      .page-header h1 {
+        font-size: 18px;
+        font-weight: 700;
+        color: #111827;
+      }
+
+      /* ── Summary Card ── */
+      .summary-card {
+        margin: 16px;
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+        border-radius: 16px;
+        padding: 20px;
+        color: #ffffff;
+      }
+
+      .summary-label {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        opacity: 0.85;
+        margin-bottom: 10px;
+      }
+
+      .summary-amount {
+        font-size: 32px;
+        font-weight: 700;
+        line-height: 1;
+        margin-bottom: 4px;
+      }
+
+      .summary-amount .currency {
+        font-size: 15px;
+        font-weight: 500;
+        opacity: 0.85;
+        margin-left: 4px;
+      }
+
+      .summary-sub {
+        font-size: 13px;
+        opacity: 0.9;
+      }
+
+      /* ── List ── */
+      .list-section {
+        padding: 4px 16px 32px;
+      }
+
+      #invoice-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .invoice-row {
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        padding: 14px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        cursor: pointer;
+        transition: opacity 0.15s;
+      }
+
+      .invoice-row:active {
+        opacity: 0.7;
+      }
+
+      .invoice-icon {
+        width: 44px;
+        height: 44px;
+        background: linear-gradient(135deg, #4ade80, #22c55e);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .invoice-icon svg {
+        width: 20px;
+        height: 20px;
+        stroke: #ffffff;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .invoice-info {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .invoice-store {
+        font-size: 14px;
+        font-weight: 700;
+        color: #111827;
+      }
+
+      .invoice-date {
+        font-size: 12px;
+        color: #6b7280;
+        margin-top: 2px;
+      }
+
+      .invoice-amount {
+        text-align: right;
+        flex-shrink: 0;
+      }
+
+      .invoice-amount .amount {
+        font-size: 15px;
+        font-weight: 700;
+        color: #111827;
+      }
+
+      .invoice-amount .currency {
+        font-size: 11px;
+        color: #6b7280;
+        margin-left: 2px;
+      }
+
+      /* ── Empty State ── */
+      #empty-state {
+        text-align: center;
+        padding: 48px 24px;
+      }
+
+      #empty-state p {
+        font-size: 15px;
+        font-weight: 600;
+        color: #111827;
+        margin-bottom: 6px;
+      }
+
+      #empty-state span {
+        font-size: 13px;
+        color: #6b7280;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div id="loading-state">
+        <div class="spinner"></div>
+        <p>Loading your purchase history…</p>
+      </div>
+
+      <div id="content" hidden>
+        <header class="page-header">
+          <h1>Purchase History</h1>
+        </header>
+
+        <div class="summary-card">
+          <p class="summary-label">This Month</p>
+          <p class="summary-amount">
+            <span id="summary-total">0.000</span
+            ><span class="currency">JOD</span>
+          </p>
+          <p class="summary-sub" id="summary-trips">0 shopping trips</p>
+        </div>
+
+        <div class="list-section">
+          <ul id="invoice-list"></ul>
+          <div id="empty-state" hidden>
+            <p>No purchases yet</p>
+            <span>Your completed checkouts will show up here</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
