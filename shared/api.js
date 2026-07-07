@@ -82,4 +82,5 @@ const API = {
   },
   getInvoiceList: (pageNumber = 1, pageSize = 20) =>
     request(`/Invoices?page=${pageNumber}&pageSize=${pageSize}`),
+  enterStore: (gateToken) => request("/Sessions/enter", "POST", { gateToken }),
 };

@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scan to Enter — Grab&amp;Go</title>
+    <link rel="stylesheet" href="shared/styles.css" />
+    <style>
+      body {
+        margin: 0;
+        height: 100vh;
+        background: #000;
+        overflow: hidden;
+      }
+
+      .scan-page {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+
+      #scan-video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .scan-overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+      }
+
+      .scan-frame {
+        width: 250px;
+        height: 250px;
+        border: 3px solid #22c55e;
+        border-radius: 16px;
+        box-shadow: 0 0 0 2000px rgba(0, 0, 0, 0.45);
+      }
+
+      .scan-text {
+        margin-top: 24px;
+        color: #ffffff;
+        font-size: 14px;
+        font-weight: 500;
+        text-align: center;
+        padding: 0 32px;
+      }
+
+      .btn-back-scan {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.5);
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 10;
+      }
+
+      .btn-back-scan svg {
+        stroke: #ffffff;
+      }
+
+      .scan-error {
+        position: absolute;
+        inset: 0;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        background: #111827;
+        color: #ffffff;
+        text-align: center;
+        padding: 32px;
+      }
+
+      .scan-error p {
+        font-size: 14px;
+        color: #f8f9fa;
+        margin: 0;
+      }
+
+      .btn-retry-scan {
+        background: #22c55e;
+        color: white;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="scan-page">
+      <button class="btn-back-scan" id="btn-back-scan" aria-label="Go back">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polyline points="15 18 9 12 15 6" />
+        </svg>
+      </button>
+
+      <video id="scan-video" autoplay playsinline muted></video>
+      <canvas id="scan-canvas" hidden></canvas>
+
+      <div class="scan-overlay">
+        <div class="scan-frame"></div>
+        <p class="scan-text" id="scan-text">
+          Point your camera at the gate QR code
+        </p>
+      </div>
+
+      <div class="scan-error" id="scan-error">
+        <p id="scan-error-text">
+          Camera access is required to scan the entry code.
+        </p>
+        <button class="btn-retry-scan" id="btn-retry-scan">Try Again</button>
+      </div>
+    </div>
+
+    <script src="shared/lib/jsQR.min.js" defer></script>
+    <script src="shared/config.js" defer></script>
+    <script src="shared/guard.js" defer></script>
+    <script src="shared/api.js" defer></script>
+    <script src="scan.js" defer></script>
+  </body>
+</html>
