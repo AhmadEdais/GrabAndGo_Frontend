@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Demo Controller — Grab&amp;Go</title>
+    <link rel="stylesheet" href="shared/styles.css" />
+    <style>
+      body {
+        margin: 0;
+        background: #f8f9fa;
+        min-height: 100vh;
+      }
+
+      .controller-page {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 24px 20px 60px;
+      }
+
+      .controller-header {
+        margin-bottom: 20px;
+      }
+
+      .controller-header h1 {
+        font-size: 22px;
+        font-weight: 700;
+        color: #111827;
+        margin: 0 0 4px 0;
+      }
+
+      .controller-header p {
+        font-size: 13px;
+        color: #6b7280;
+        margin: 0;
+      }
+
+      .section-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #111827;
+        margin: 0 0 12px 0;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+
+      .connection-status {
+        font-size: 12px;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 50px;
+        display: inline-block;
+        margin-bottom: 20px;
+      }
+
+      .connection-status--connected {
+        background: #f0fdf4;
+        color: #16a34a;
+      }
+
+      .connection-status--disconnected {
+        background: #fee2e2;
+        color: #dc2626;
+      }
+
+      /* ─── Shared Card List Styles ───────────────────────────────── */
+      .card-feed {
+        margin-bottom: 28px;
+      }
+
+      .card-feed__empty {
+        background: #ffffff;
+        border: 1px dashed #d1d5db;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        font-size: 13px;
+        color: #9ca3af;
+      }
+
+      .card-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      /* ─── Incoming (Unbound) Session Cards ──────────────────────── */
+      .session-card {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .session-card__info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .session-card__id {
+        font-size: 14px;
+        font-weight: 600;
+        color: #111827;
+      }
+
+      .session-card__meta {
+        font-size: 12px;
+        color: #6b7280;
+      }
+
+      .btn-bind {
+        background: #22c55e;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+
+      .btn-bind:disabled {
+        background: #d1d5db;
+        cursor: not-allowed;
+      }
+
+      /* ─── Tracked (Bound, Not Checked Out) Session Cards ────────── */
+      .track-card {
+        background: #ffffff;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        cursor: pointer;
+        transition:
+          border-color 0.15s ease,
+          background 0.15s ease;
+      }
+
+      .track-card:hover {
+        border-color: #86efac;
+      }
+
+      .track-card--selected {
+        border-color: #22c55e;
+        background: #f0fdf4;
+      }
+
+      .track-card__info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .track-card__id {
+        font-size: 14px;
+        font-weight: 600;
+        color: #111827;
+        font-family: monospace;
+      }
+
+      .track-card__meta {
+        font-size: 12px;
+        color: #6b7280;
+      }
+
+      .track-card__badge {
+        font-size: 11px;
+        font-weight: 600;
+        padding: 3px 10px;
+        border-radius: 50px;
+        background: #dbeafe;
+        color: #1d4ed8;
+        white-space: nowrap;
+      }
+
+      .track-card--selected .track-card__badge {
+        background: #22c55e;
+        color: white;
+      }
+
+      /* ─── Selected Session Bar (Acting As) ──────────────────────── */
+      .selected-bar {
+        background: #111827;
+        border-radius: 12px;
+        padding: 14px 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 28px;
+      }
+
+      .selected-bar__label {
+        font-size: 12px;
+        color: #9ca3af;
+        margin: 0 0 2px 0;
+      }
+
+      .selected-bar__value {
+        font-size: 15px;
+        font-weight: 700;
+        color: #ffffff;
+        font-family: monospace;
+        margin: 0;
+      }
+
+      .selected-bar__value--empty {
+        color: #6b7280;
+        font-family: inherit;
+        font-weight: 500;
+        font-size: 13px;
+      }
+
+      .btn-checkout {
+        background: #ef4444;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+
+      .btn-checkout:disabled {
+        background: #374151;
+        color: #6b7280;
+        cursor: not-allowed;
+      }
+
+      /* ─── Product Grid ──────────────────────────────────────────── */
+      .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 12px;
+        margin-bottom: 32px;
+      }
+
+      .product-card {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .product-card__name {
+        font-size: 14px;
+        font-weight: 600;
+        color: #111827;
+      }
+
+      .product-card__label {
+        font-size: 11px;
+        color: #9ca3af;
+        font-family: monospace;
+      }
+
+      .product-card__actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 4px;
+      }
+
+      .btn-action {
+        flex: 1;
+        border: none;
+        border-radius: 8px;
+        padding: 8px 0;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .btn-pick {
+        background: #22c55e;
+        color: white;
+      }
+
+      .btn-return {
+        background: #fee2e2;
+        color: #dc2626;
+      }
+
+      .btn-action:disabled {
+        background: #e5e7eb;
+        color: #9ca3af;
+        cursor: not-allowed;
+      }
+
+      /* ─── Event Log ─────────────────────────────────────────────── */
+      .event-log {
+        background: #111827;
+        border-radius: 12px;
+        padding: 16px;
+        max-height: 220px;
+        overflow-y: auto;
+        font-family: monospace;
+        font-size: 12px;
+      }
+
+      .event-log__empty {
+        color: #6b7280;
+      }
+
+      .event-log__line {
+        color: #d1fae5;
+        padding: 2px 0;
+        border-bottom: 1px solid #1f2937;
+      }
+
+      .event-log__line--return {
+        color: #fecaca;
+      }
+
+      .event-log__line--checkout {
+        color: #fde68a;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="controller-page">
+      <div class="controller-header">
+        <h1>Demo Controller</h1>
+        <p>
+          Simulates the vision system — bind sessions, select a tracked
+          customer, publish pick/return events, and check out.
+        </p>
+      </div>
+
+      <span
+        class="connection-status connection-status--disconnected"
+        id="mqtt-status"
+      >
+        MQTT: connecting...
+      </span>
+
+      <!-- Incoming Sessions — not bound yet -->
+      <div class="card-feed">
+        <p class="section-title">Incoming Sessions</p>
+        <div class="card-feed__empty" id="incoming-empty">
+          Waiting for a customer to scan the gate QR...
+        </div>
+        <div class="card-list" id="incoming-list" hidden></div>
+      </div>
+
+      <!-- Tracked Sessions — bound, not checked out, selectable -->
+      <div class="card-feed">
+        <p class="section-title">Active Tracked Customers</p>
+        <div class="card-feed__empty" id="tracked-empty">
+          No customers being tracked yet.
+        </div>
+        <div class="card-list" id="tracked-list" hidden></div>
+      </div>
+
+      <!-- Currently Selected / Checkout -->
+      <div class="selected-bar">
+        <div>
+          <p class="selected-bar__label">Acting as</p>
+          <p
+            class="selected-bar__value selected-bar__value--empty"
+            id="selected-track-label"
+          >
+            No customer selected
+          </p>
+        </div>
+        <button class="btn-checkout" id="btn-checkout" disabled>
+          Checkout
+        </button>
+      </div>
+
+      <!-- Product Grid -->
+      <div>
+        <p class="section-title">Store Items</p>
+        <div class="product-grid" id="product-grid"></div>
+      </div>
+
+      <!-- Event Log -->
+      <div>
+        <p class="section-title">Event Log</p>
+        <div class="event-log" id="event-log">
+          <div class="event-log__empty">No events published yet.</div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+    <script src="shared/config.js" defer></script>
+    <script src="shared/api.js" defer></script>
+    <script src="demo-controller.js" defer></script>
+  </body>
+</html>

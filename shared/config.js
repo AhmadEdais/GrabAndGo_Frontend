@@ -7,4 +7,10 @@ const CONFIG = {
   TOKEN_KEY: "gg_token",
   USER_KEY: "gg_user",
   TRACK_KEY: "gg_track_id",
+  Broker: {
+    Host: "wss://303d1530cfe34f16836e459235623f60.s1.eu.hivemq.cloud:8884/mqtt",
+    Username: "grabandgo_backend",
+    Password: `}zy5A2Z5GK\\g-2brDB`,
+    Topic: "grabandgo/+/store/+/vision/events/#",
+  },
 };

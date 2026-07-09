@@ -51,11 +51,11 @@ const API = {
   getBalance: () => request("/Wallets/balance"),
   topUp: (amount) => request("/Wallets/top-up", "POST", { amount }),
   getActiveCart: () => request("/Carts/active"),
-  bindTrack: (sessionId, trackId) =>
+  bindTrack: (sessionId, trackId, source) =>
     request("/VisionSystem/bind-track", "POST", {
       sessionId: String(sessionId),
       trackId,
-      source: "CAM01_Entry",
+      source,
     }),
 
   simulateCheckout: (trackId) =>
@@ -83,4 +83,5 @@ const API = {
   getInvoiceList: (pageNumber = 1, pageSize = 20) =>
     request(`/Invoices?page=${pageNumber}&pageSize=${pageSize}`),
   enterStore: (gateToken) => request("/Sessions/enter", "POST", { gateToken }),
+  getProductsDemo: () => request("/Products/demo", "GET"),
 };
