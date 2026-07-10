@@ -39,7 +39,39 @@ const request = async (
 
   return response.json();
 };
+const requestWithApiKey = async (
+  endpoint,
+  apiKey,
+  method = "GET",
+  body = null,
+) => {
+  const options = {
+    method,
+    headers: {
+      "Content-Type": "application/json",
+      "X-Api-Key": apiKey,
+    },
+  };
 
+  if (body) {
+    options.body = JSON.stringify(body);
+  }
+
+  const response = await fetch(`${CONFIG.BASE_URL}${endpoint}`, options);
+
+  if (!response.ok) {
+    const error = await response
+      .json()
+      .catch(() => ({ message: "Request failed" }));
+    throw new Error(error.message || "Request failed");
+  }
+
+  if (response.status === 204) {
+    return null;
+  }
+
+  return response.json();
+};
 const API = {
   login: (email, password) =>
     request("/Users/login", "POST", { email, password }),
@@ -52,14 +84,19 @@ const API = {
   topUp: (amount) => request("/Wallets/top-up", "POST", { amount }),
   getActiveCart: () => request("/Carts/active"),
   bindTrack: (sessionId, trackId, source) =>
-    request("/VisionSystem/bind-track", "POST", {
-      sessionId: String(sessionId),
-      trackId,
-      source,
-    }),
+    requestWithApiKey(
+      "/VisionSystem/bind-track",
+      CONFIG.Vision_API_KEY,
+      "POST",
+      {
+        sessionId: String(sessionId),
+        trackId,
+        source,
+      },
+    ),
 
   simulateCheckout: (trackId) =>
-    request("/Gate/checkout", "POST", {
+    requestWithApiKey("/Gate/checkout", CONFIG.GATE_API_KEY, "POST", {
       trackId,
       cameraCode: "CAM03_Checkout",
       eventTime: new Date().toISOString(),
@@ -84,4 +121,6 @@ const API = {
     request(`/Invoices?page=${pageNumber}&pageSize=${pageSize}`),
   enterStore: (gateToken) => request("/Sessions/enter", "POST", { gateToken }),
   getProductsDemo: () => request("/Products/demo", "GET"),
+  getAllActiveSessions: () =>
+    requestWithApiKey("/Sessions/all-active", CONFIG.Vision_API_KEY, "GET"),
 };

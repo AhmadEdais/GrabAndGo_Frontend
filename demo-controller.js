@@ -68,6 +68,10 @@ const connectToMqttBroker = async () => {
   state.mqttStatus.on("connect", () => {
     changeMqttStatusTextToConnected();
   });
+  console.log(`Broker Host : ${CONFIG.Broker.Host}`);
+  console.log(
+    `username :${CONFIG.Broker.Username} password :${CONFIG.Broker.Password}`,
+  );
   state.mqttStatus.on("close", () => {
     changeMqttStatusTextToDisConnected();
   });
@@ -151,6 +155,21 @@ const renderTrackedList = async () => {
   `,
     )
     .join("");
+};
+const renderAllActiveSessions = async () => {
+  const activeSessions = await API.getAllActiveSessions();
+
+  activeSessions.forEach((session) => {
+    if (session.isTracked) {
+      state.trackedList[session.trackId] = {
+        sessionId: session.sessionId,
+        trackId: session.trackId,
+        storeId: session.storeId,
+      };
+    } else {
+      state.incomingList[session.sessionId] = session;
+    }
+  });
 };
 productGrid.addEventListener("click", (event) => {
   const target = event.target;
@@ -244,13 +263,17 @@ btnCheckout.addEventListener("click", async () => {
 const init = async () => {
   try {
     await connectToMqttBroker();
-    await connectToHub();
+    await renderAllActiveSessions();
     const data = await API.getProductsDemo();
     productsList = data.map((item) => ({
       productName: item.productName,
       productsAiLabel: item.productAiLabel,
       productImageUrl: item.imageUrl,
     }));
+    renderIncomingList();
+    renderTrackedList();
+    await connectToHub();
+
     await renderProductGrid();
   } catch (err) {
     console.log(`error${err}`);

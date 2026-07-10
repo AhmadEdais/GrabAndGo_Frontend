@@ -4,13 +4,14 @@ const CONFIG = {
   GATE_HUB_URL: "https://192.168.1.7:7001/hubs/gate",
   INVOICE_HUB_URL: "https://192.168.1.7:7001/hubs/invoice",
   GATE_API_KEY: "DEV-GATE-KEY-REPLACE-IN-PROD-32CHARS-MIN",
+  Vision_API_KEY: "DEV-VISION-KEY-REPLACE-IN-PROD-32CHARS-MIN",
   TOKEN_KEY: "gg_token",
   USER_KEY: "gg_user",
   TRACK_KEY: "gg_track_id",
   Broker: {
     Host: "wss://303d1530cfe34f16836e459235623f60.s1.eu.hivemq.cloud:8884/mqtt",
-    Username: "grabandgo_backend",
-    Password: `}zy5A2Z5GK\\g-2brDB`,
-    Topic: "grabandgo/+/store/+/vision/events/#",
+    Username: "grabandgo_demo_controller",
+    Password: "GrabAndGo123",
+    Topic: "grabandgo/dev/store/SWFI/vision/events/interaction",
   },
 };
