@@ -241,8 +241,8 @@ btnCheckout.addEventListener("click", async () => {
   const trackId = state.currentTrackId;
 
   try {
-    await API.simulateCheckout(trackId);
-
+    const data = await API.simulateCheckout(trackId);
+    if (data.gateAction === "KeepClosed") return;
     delete state.trackedList[trackId];
     renderTrackedList();
 
