@@ -13,7 +13,7 @@ const amountInput = document.getElementById("amount-input");
 const inputErrorEl = document.getElementById("input-error");
 const cancelBtn = document.getElementById("cancel-btn");
 const confirmBtn = document.getElementById("confirm-btn");
-
+const logoutBtn = document.getElementById("logoutBtn");
 const renderProfile = (user) => {
   const initials = `${user.firstName[0]}${user.lastName[0]}`.toUpperCase();
   avatarEl.textContent = initials;
@@ -63,6 +63,12 @@ const handleTopUp = async () => {
     confirmBtn.textContent = "Confirm";
   }
 };
+const logout = () => {
+  localStorage.removeItem(CONFIG.TOKEN_KEY);
+  localStorage.removeItem(CONFIG.USER_KEY);
+
+  window.location.replace("login.html");
+};
 
 const init = async () => {
   state.isLoading = true;
@@ -84,6 +90,7 @@ const init = async () => {
   topUpBtn.addEventListener("click", openModal);
   cancelBtn.addEventListener("click", closeModal);
   confirmBtn.addEventListener("click", handleTopUp);
+  logoutBtn.addEventListener("click", logout);
 
   modalEl.addEventListener("click", (e) => {
     if (e.target === modalEl) closeModal();

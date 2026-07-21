@@ -187,6 +187,20 @@
         font-weight: 600;
         color: #111827;
       }
+      .logout {
+        width: 100%;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 600;
+        color: #ffffff;
+        background-color: #ef4444;
+        text-align: left;
+      }
+
+      .logout:hover {
+        background-color: #dc2626;
+      }
 
       .menu-chevron {
         font-size: 18px;
@@ -335,7 +349,11 @@
           <span class="menu-chevron">›</span>
         </a>
       </div>
-
+      <div class="menu-section">
+        <button id="logoutBtn" class="menu-item logout" type="button">
+          <span>Logout</span>
+        </button>
+      </div>
       <!-- Top-Up Modal -->
       <div id="modal-overlay" hidden>
         <div class="modal-card">
@@ -357,6 +375,7 @@
         </div>
       </div>
     </div>
-    <script src="profile.js"></script>
+    <script src="shared/guard.js" defer></script>
+    <script src="profile.js" defer></script>
   </body>
 </html>
